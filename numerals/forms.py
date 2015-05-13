@@ -1,7 +1,11 @@
 from django import forms
 from django.utils import OutOfRangeError, NotIntegerError
 
-#Define digit mapping
+
+class NumeralForm(forms.Form):
+    n = forms.IntegerField()
+
+
 romanNumeralMap = (('M',  1000),
                    ('CM', 900),
                    ('D',  500),
