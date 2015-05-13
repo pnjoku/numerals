@@ -1,36 +1,33 @@
 from django import forms
-from django.utils import OutOfRangeError, NotIntegerError
 
 
 class NumeralForm(forms.Form):
-    n = forms.IntegerField()
+    n = forms.IntegerField(min_value=1, max_value=3999)
 
+    ROMAN_NUMERAL_MAP = (
+        ('M',  1000),
+        ('CM', 900),
+        ('D',  500),
+        ('CD', 400),
+        ('C',  100),
+        ('XC', 90),
+        ('L',  50),
+        ('XL', 40),
+        ('X',  10),
+        ('IX', 9),
+        ('V',  5),
+        ('IV', 4),
+        ('I',  1)
+    )
 
-romanNumeralMap = (('M',  1000),
-                   ('CM', 900),
-                   ('D',  500),
-                   ('CD', 400),
-                   ('C',  100),
-                   ('XC', 90),
-                   ('L',  50),
-                   ('XL', 40),
-                   ('X',  10),
-                   ('IX', 9),
-                   ('V',  5),
-                   ('IV', 4),
-                   ('I',  1))
+    def to_roman(self):
+        """convert integer to Roman numeral"""
 
+        n = self.cleaned_data.get('n')
 
-def toRoman(n):
-    """convert integer to Roman numeral"""
-    if not (0 < n < 4000):
-            raise OutOfRangeError("number out of range (must be 1..3999)")
-    if int(n) != n:
-            raise NotIntegerError("non-integers can not be converted")
-
-    result = ""
-    for numeral, integer in romanNumeralMap:
-        while n >= integer:
-            result += numeral
-            n -= integer
-    return result
+        result = ""
+        for numeral, integer in self.ROMAN_NUMERAL_MAP:
+            while n >= integer:
+                result += numeral
+                n -= integer
+        return result
